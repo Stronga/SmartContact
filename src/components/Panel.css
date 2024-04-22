@@ -1,0 +1,117 @@
+@font-face {
+    font-family: 'Inter';
+    src: url('./assets/fonts/Inter-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Inter';
+    src: url('./assets/fonts/Inter-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+  }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+  
+  strong {
+    font-weight: bold; 
+  }
+  
+  .panel {
+    width: 432px;
+    height: 500px;
+    flex-grow: 0;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    background-color: #fff;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-100%);
+    transition: transform 0.5s ease-in-out;
+    background-color: #ddedf5;
+    padding: 40px 15px;
+    border-radius: 0 0 14px 14px;
+    margin: -40px auto;
+    position: relative;
+  }
+  
+  .panel-container {
+    
+    
+  }
+
+  .mainApp{
+    width:450px;
+    height:75px;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    object-fit: contain;
+    border-radius: 14px;
+    -webkit-backdrop-filter: blur(80px);
+    backdrop-filter: blur(80px);
+    box-shadow: 0 8px 40px 0 rgba(0, 0, 0, 0.1);
+    background-color: #450d59;
+    position: relative;
+    z-index: 1;
+  }
+
+  .sendbtn{
+    display: block;
+    width: 75px;
+    float: left;
+  }
+
+  .btn.send-btn{
+    width: 75px;
+    height: 75px;
+    border-radius: 5px;
+    border: none;
+    font-size: 54px;
+    color: #450d59;
+    background-color: #fff;
+  }
+
+  
+
+  .btn.add-btn{
+    float: right;
+    font-size: 47px;
+    color: #fff;
+    background-color: #ffffff00;
+    border: none;
+  }
+
+  .apptitle {
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin-left: 10px;
+    float: left;
+    }
+
+.apptitle h1 {
+    margin:0px;
+    font-weight: bold;
+    font-size: 20px;
+    }
+.apptitle h2 {
+        margin:0px;
+        font-weight: normal;
+        font-size: 10px;
+     }
+     .close-panel {
+        position: absolute;
+        bottom: 10px;
+        right:10px;
+        border: none;
+        background: none;
+        color: #450d59; 
+        font-size: 14px;
+        cursor: pointer;
+      }
+      
