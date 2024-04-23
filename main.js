@@ -2,15 +2,25 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
-// Define the path to the JSON file
+ipcMain.on('close-app', () => {
+    app.quit();  // Closes it
+});
+
+ipcMain.on('minimize-app', () => {
+    BrowserWindow.minimize();  // Minimizes it
+});
+
+
+
+// path to the JSON file
 const filePath = path.join(app.getPath('userData'), 'contacts.json');
 
-// Ensure that the JSON file exists
+// Exiting the JSON file exists :)
 function ensureDataFileExists() {
     try {
-        // Check if the file exists
+        // Check 
         if (!fs.existsSync(filePath)) {
-            // If the file does not exist, write an empty array to it
+            // If not let there be JSON file
             fs.writeFileSync(filePath, JSON.stringify([]));
             console.log('Contacts file created successfully.');
         }
@@ -40,7 +50,7 @@ ipcMain.on('updateContact', async (event, updatedContact) => {
 ipcMain.on('addContact', (event, newContact) => {
     try {
       let contacts = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-      contacts.push(newContact); // Add the new contact
+      contacts.push(newContact); 
       fs.writeFileSync(filePath, JSON.stringify(contacts, null, 2), 'utf8');
     } catch (error) {
       console.error('Failed to add contact:', error);
@@ -51,22 +61,24 @@ ipcMain.on('addContact', (event, newContact) => {
 
 function createWindow() {
     const win = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 540,
+        height: 700,
+        frame: false,
+        transparent: true,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false // Consider using context isolation and preload scripts for production
+            contextIsolation: false //to remind me after development
         }
     });
 
-    // Load the 'index.html' from the 'public' directory
+   
     win.loadFile(path.join(__dirname, 'public', 'index.html'));
-    win.webContents.openDevTools(); // Remove or comment out this line in production for a cleaner user interface
+    // win.webContents.openDevTools(); // Remove or comment out this line in production for a cleaner user interface
 
-    // Ensure the contacts data file exists when the application starts
+    
     ensureDataFileExists();
 
-    // IPC Handlers for reading and writing contact data
+    
     ipcMain.handle('readContacts', async () => {
         try {
             const data = fs.readFileSync(filePath, 'utf8');

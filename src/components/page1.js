@@ -55,7 +55,10 @@ const Page1 = ({ setCurrentPage, setEditingContact }) => {
                           </div>
                         </div>
                           <div className="status-toggle">
-                          <button className="edit-btn" onClick={() => handleEdit(contact)}>
+                          <button className="edit-btn" onClick={() => {
+                                setEditingContact(contact);
+                                setCurrentPage(2);  
+                            }}>
                           <FontAwesomeIcon icon={faPenToSquare} />
                           </button>
                              <ToggleSwitch

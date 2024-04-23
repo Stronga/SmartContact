@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Page1 from './components/page1';
 import Page2 from './components/page2';
 import Page3 from './components/page3';
+import WindowControls from './components/WindowControls';
 import './components/Panel.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane, faCirclePlus, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
@@ -32,7 +33,7 @@ const Navigation = () => {
             setTimeoutId(id);
         }
     };
-
+    //Hold panel when some is working
     useEffect(() => {
         const events = ['click', 'mousemove', 'keydown'];
         const resetTimer = () => resetTimeout();
@@ -45,7 +46,12 @@ const Navigation = () => {
 
     const handleNavClick = (page) => {
         setIsPanelVisible(true);
-        if (currentPage !== page) setCurrentPage(page);
+        if (currentPage !== page) {
+            setCurrentPage(page);
+            if (page === 2) {
+                setEditingContact(null);
+            }
+        }
         resetTimeout();
     };
 
@@ -53,19 +59,24 @@ const Navigation = () => {
         setIsStylingMode(!isStylingMode);
         setIsPanelVisible(true);
     };
+    //After edit come here
+    const onNavigate = (page) => {
+        setCurrentPage(page);
+        setIsPanelVisible(false);
+    };
 
     const renderPage = () => {
         switch (currentPage) {
             case 1: return <Page1 setCurrentPage={setCurrentPage} setEditingContact={setEditingContact} />;
-            case 2: return <Page2 />;
-            case 3: return <Page3 editingContact={editingContact} />;
+            case 2: return <Page2 editingContact={editingContact} onNavigate={onNavigate} />;
+            case 3: return <Page3 />;
             default: return <div>Select a page</div>;
         }
     };
 
     return (
-        <div>
-            <div className="mainApp">
+        <div className='appwrap'><WindowControls />
+            <div className="mainApp draggable">
                 <button className="btn send-btn" onClick={() => handleNavClick(1)}>
                     <FontAwesomeIcon icon={faPaperPlane} />
                 </button>
