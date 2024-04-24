@@ -17,20 +17,20 @@
     margin:0;
   }
   .appwrap{
-    width: 530px;
+    width: 430px;
   }
- 
+ .btn:focus { outline: none; }
 .draggable {
-  -webkit-app-region: drag;
-  
+  -webkit-app-region: drag; 
 }
 .close-btn{
   border: none;
   background: none;
-  font-size: 35px;
+  font-size: 20px;
   color: #810a0a;
   transform: translateY(100%);
   transition: transform 0.5s ease-in-out;
+  
 }
 .close-btn:hover{
   color: #ad0d0d;
@@ -39,21 +39,20 @@
 .minimize-btn{
   border: none;
   background: none;
-  font-size: 35px;
-  color: #8d8080;
+  font-size: 20px;
+  color: #ffffffce;
   transform: translateY(100%);
   transition: transform 0.5s ease-in-out;
 }
 
 .minimize-btn:hover{
-  color:#5a5959
+  color:#ffffff
 }
 .btn {
   -webkit-app-region: no-drag;
 }
 
 .window-controls{
-    padding-right: 40px;
     float:right;
     -webkit-app-region: no-drag;
     overflow: hidden;
@@ -61,21 +60,19 @@
 .mainApp:hover .window-controls{
   
 }
-  strong {
+strong {
     font-weight: bold; 
-  }
-  
-  .panel {
-    width: 432px;
-    height: 500px;
+ }
+ .panel {
+    width: 370px;
+    height: 400px;
     flex-grow: 0;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-    background-color: #fff;
+    background-color: #ffffffdb;
     align-items: center;
     justify-content: center;
     transform: translateY(-100%);
     transition: transform 0.5s ease-in-out;
-    background-color: #ddedf5;
     padding: 40px 15px;
     border-radius: 0 0 14px 14px;
     margin: -40px auto 40px;
@@ -84,19 +81,19 @@
   
   .panel-container {
     overflow: hidden;
-    width:490px;
+    width:430px;
     max-height: 600px;
     
   }
 
   .mainApp{
-    width:450px;
-    height:75px;
+    width:400px;
+    height:60px;
     display: flex;
     align-items: center;
-    padding: 20px;
+    padding: 15px;
     object-fit: contain;
-    border-radius: 14px;
+    border-radius: 10px;
     -webkit-backdrop-filter: blur(80px);
     backdrop-filter: blur(80px);
     box-shadow: 0 8px 40px 0 rgba(0, 0, 0, 0.1);
@@ -113,17 +110,15 @@
   }
 
   .btn.send-btn{
-    width: 75px;
-    height: 75px;
+    width: 60px;
+    height: 60px;
     border-radius: 5px;
     border: none;
-    font-size: 54px;
+    font-size: 30px;
     color: #450d59;
     background-color: #fff;
     -webkit-app-region: no-drag;
   }
-
-  
 
   .btn.add-btn{
     float: right;
@@ -152,8 +147,8 @@
         margin:0px;
         font-weight: normal;
         font-size: 10px;
-     }
-     .close-panel {
+}
+.close-panel {
         position: absolute;
         bottom: 10px;
         right:10px;
@@ -162,5 +157,5 @@
         color: #450d59; 
         font-size: 14px;
         cursor: pointer;
-      }
+}
       

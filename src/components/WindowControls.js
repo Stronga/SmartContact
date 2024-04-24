@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSquareXmark, faSquareMinus } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faMinus } from '@fortawesome/free-solid-svg-icons';
 const { ipcRenderer } = window.require('electron');
 
 const WindowControls = () => {
@@ -10,8 +10,8 @@ const WindowControls = () => {
     return (
         <div className="window-controls">
             
-           <button onClick={handleMinimize} className="minimize-btn wbtn"><FontAwesomeIcon icon={faSquareMinus} /></button>
-            <button onClick={handleClose} className="close-btn wbtn"><FontAwesomeIcon icon={faSquareXmark} /></button>
+           <button onClick={handleMinimize} className="minimize-btn wbtn"><FontAwesomeIcon icon={faMinus} /></button>
+            <button onClick={handleClose} className="close-btn wbtn"><FontAwesomeIcon icon={faXmark}/></button>
             
         </div>
     );
