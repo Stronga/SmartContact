@@ -19,12 +19,12 @@ const Page1 = ({ setCurrentPage, setEditingContact }) => {
     };
 
     const handleEdit = (contact) => {
-      setEditingContact(contact);  // Set the contact to be edited
-      setCurrentPage(3);  // Navigate to the edit page
+      setEditingContact(contact); 
+      setCurrentPage(3);  
   };
 
     const handleToggleActive = (index) => {
-      // Create a new array with the toggled active state for the selected contact
+      
       const updatedContacts = contacts.map((contact, idx) => {
           if (idx === index) {
               return { ...contact, active: !contact.active };
@@ -32,16 +32,16 @@ const Page1 = ({ setCurrentPage, setEditingContact }) => {
           return contact;
       });
 
-      // Update the contacts state with the new array
+      
       setContacts(updatedContacts);
 
-      // You can also send the updated contact back to the main process for persistence
+     
        ipcRenderer.send('updateContact', updatedContacts[index]);
   };
 
 
     return (
-        <div>
+        <div className='innerpage'>
             
             {contacts.length > 0 ? (
                 <ul className="contact-list">

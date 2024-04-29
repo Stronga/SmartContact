@@ -1,26 +1,14 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, globalShortcut, ipcMain } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
-ipcMain.on('close-app', () => {
-    app.quit();  // Closes it
-});
-
-ipcMain.on('minimize-app', () => {
-    BrowserWindow.minimize();  // Minimizes it
-});
-
-
-
-// path to the JSON file
+// Path to the JSON file
 const filePath = path.join(app.getPath('userData'), 'contacts.json');
 
-// Exiting the JSON file exists :)
+// Ensure that the JSON file exists
 function ensureDataFileExists() {
     try {
-        // Check 
         if (!fs.existsSync(filePath)) {
-            // If not let there be JSON file
             fs.writeFileSync(filePath, JSON.stringify([]));
             console.log('Contacts file created successfully.');
         }
@@ -29,78 +17,85 @@ function ensureDataFileExists() {
     }
 }
 
-ipcMain.on('updateContact', async (event, updatedContact) => {
-    try {
-      let contacts = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-  
-      contacts = contacts.map(contact => {
-        if (contact.id === updatedContact.id) {
-          return updatedContact;
-        }
-        return contact;
-      });
-  
-      await fs.promises.writeFile(filePath, JSON.stringify(contacts, null, 2), 'utf8');
-    } catch (error) {
-      console.error('Failed to update contact:', error);
-    }
-  });
-
-  // creating contact
-ipcMain.on('addContact', (event, newContact) => {
-    try {
-      let contacts = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-      contacts.push(newContact); 
-      fs.writeFileSync(filePath, JSON.stringify(contacts, null, 2), 'utf8');
-    } catch (error) {
-      console.error('Failed to add contact:', error);
-    }
-  });
-  
-
+let mainWindow; // Keep a global reference of the window object
 
 function createWindow() {
-    const win = new BrowserWindow({
-        width: 540,
-        height: 700,
+    mainWindow = new BrowserWindow({
+        width: 430,
+        height: 600,
         frame: false,
         transparent: true,
+        resizable: false,
+        icon: '/src/components/assets/icon/smartcontact.ico',
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false //to remind me after development
+            contextIsolation: false // Important for preloading scripts and security
         }
     });
 
-   
-    win.loadFile(path.join(__dirname, 'public', 'index.html'));
-    // win.webContents.openDevTools(); // Remove or comment out this line in production for a cleaner user interface
+    mainWindow.loadFile(path.join(__dirname, 'public', 'index.html'));
 
-    
+    // Uncomment the following line to open the DevTools:
+    // mainWindow.webContents.openDevTools();
+
     ensureDataFileExists();
-
-    
-    ipcMain.handle('readContacts', async () => {
-        try {
-            const data = fs.readFileSync(filePath, 'utf8');
-            return JSON.parse(data);
-        } catch (error) {
-            console.error('Failed to read contacts:', error);
-            return [];
-        }
-    });
-
-    ipcMain.handle('writeContacts', async (event, contacts) => {
-        try {
-            fs.writeFileSync(filePath, JSON.stringify(contacts, null, 2), 'utf8');
-            return true;
-        } catch (error) {
-            console.error('Failed to write contacts:', error);
-            return false;
-        }
-    });
 }
 
-app.whenReady().then(createWindow);
+ipcMain.on('close-app', () => {
+    mainWindow.close();  // Properly target the mainWindow to close it
+});
+
+ipcMain.on('minimize-app', () => {
+    mainWindow.minimize();  // Properly target the mainWindow to minimize it
+});
+
+ipcMain.on('updateContact', async (event, updatedContact) => {
+    try {
+        let contacts = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        contacts = contacts.map(contact => contact.id === updatedContact.id ? updatedContact : contact);
+        await fs.promises.writeFile(filePath, JSON.stringify(contacts, null, 2), 'utf8');
+    } catch (error) {
+        console.error('Failed to update contact:', error);
+    }
+});
+
+ipcMain.on('addContact', (event, newContact) => {
+    try {
+        let contacts = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        contacts.push(newContact);
+        fs.writeFileSync(filePath, JSON.stringify(contacts, null, 2), 'utf8');
+    } catch (error) {
+        console.error('Failed to add contact:', error);
+    }
+});
+
+ipcMain.handle('readContacts', async () => {
+    try {
+        const data = fs.readFileSync(filePath, 'utf8');
+        return JSON.parse(data);
+    } catch (error) {
+        console.error('Failed to read contacts:', error);
+        return [];
+    }
+});
+
+ipcMain.handle('writeContacts', async (event, contacts) => {
+    try {
+        fs.writeFileSync(filePath, JSON.stringify(contacts, null, 2), 'utf8');
+        return true;
+    } catch (error) {
+        console.error('Failed to write contacts:', error);
+        return false;
+    }
+});
+
+app.on('ready', () => {
+    createWindow();
+  
+    // Register a shortcut listener for 'Control+Shift+I'
+    globalShortcut.register('Control+Shift+I', () => {
+    });
+  });
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
@@ -113,3 +108,7 @@ app.on('activate', () => {
         createWindow();
     }
 });
+app.on('will-quit', () => {
+    // Unregister all shortcuts
+    globalShortcut.unregisterAll();
+  });

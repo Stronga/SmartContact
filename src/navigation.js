@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Page1 from './components/page1';
 import Page2 from './components/page2';
@@ -9,12 +9,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane, faCirclePlus, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
 
 const panelVariants = {
-  hidden: { y: "-100%", opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { duration: 0.5 }
-  }
+    hidden: { y: "-100%", opacity: 0 },
+    visible: {
+        y: 0,
+        opacity: 1,
+        transition: { duration: 0.5 }
+    }
 };
 
 const Navigation = () => {
@@ -23,20 +23,16 @@ const Navigation = () => {
     const [isPanelVisible, setIsPanelVisible] = useState(false);
     const [isStylingMode, setIsStylingMode] = useState(false);
     const [timeoutId, setTimeoutId] = useState(null);
+    const panelRef = useRef(null);
 
-    const resetTimeout = () => {
-        if (timeoutId) clearTimeout(timeoutId);
-        if (!isStylingMode) {
-            const id = setTimeout(() => {
-                setIsPanelVisible(false);
-            }, 10000);
-            setTimeoutId(id);
-        }
-    };
-    //Hold panel when some is working
     useEffect(() => {
-        const events = ['click', 'mousemove', 'keydown'];
-        const resetTimer = () => resetTimeout();
+        const events = ['mousemove', 'keydown'];
+        const resetTimer = () => {
+            if (timeoutId) clearTimeout(timeoutId);
+            if (!isStylingMode) {
+                setTimeoutId(setTimeout(() => setIsPanelVisible(false), 10000));
+            }
+        };
         events.forEach(event => window.addEventListener(event, resetTimer));
         return () => {
             events.forEach(event => window.removeEventListener(event, resetTimer));
@@ -46,20 +42,15 @@ const Navigation = () => {
 
     const handleNavClick = (page) => {
         setIsPanelVisible(true);
-        if (currentPage !== page) {
-            setCurrentPage(page);
-            if (page === 2) {
-                setEditingContact(null);
-            }
-        }
-        resetTimeout();
+        setCurrentPage(page);
+        if (page === 2) setEditingContact(null);
     };
 
     const toggleStylingMode = () => {
         setIsStylingMode(!isStylingMode);
         setIsPanelVisible(true);
     };
-    //After edit come here
+
     const onNavigate = (page) => {
         setCurrentPage(page);
         setIsPanelVisible(false);
@@ -69,13 +60,37 @@ const Navigation = () => {
         switch (currentPage) {
             case 1: return <Page1 setCurrentPage={setCurrentPage} setEditingContact={setEditingContact} />;
             case 2: return <Page2 editingContact={editingContact} onNavigate={onNavigate} />;
-            case 3: return <Page3 />;
+            case 3: return <Page3 editingContact={editingContact} />;
             default: return <div>Select a page</div>;
         }
     };
 
+    useEffect(() => {
+        if (isPanelVisible) {
+            const panel = document.querySelector('.innerpage');
+            if (panel) {
+                const showScrollbar = () => panel.style.overflow = 'auto';
+                const hideScrollbar = () => panel.style.overflow = 'hidden';
+        
+                panel.addEventListener('mouseover', showScrollbar);
+                panel.addEventListener('mouseout', hideScrollbar);
+                panel.addEventListener('scroll', showScrollbar);
+        
+                return () => {
+                    panel.removeEventListener('mouseover', showScrollbar);
+                    panel.removeEventListener('mouseout', hideScrollbar);
+                    panel.removeEventListener('scroll', showScrollbar);
+                };
+            }
+        }
+    }, [isPanelVisible]);
+    
+    
+    
+
     return (
-        <div className='appwrap'><WindowControls />
+        <div className='appwrap'>
+            <WindowControls />
             <div className="mainApp draggable">
                 <button className="btn send-btn" onClick={() => handleNavClick(1)}>
                     <FontAwesomeIcon icon={faPaperPlane} />
@@ -98,12 +113,14 @@ const Navigation = () => {
                             initial="hidden"
                             animate="visible"
                             exit="hidden"
+                            ref={panelRef}
                         >
                             {renderPage()}
-                            <button className="btn close-panel" onClick={toggleStylingMode} aria-label="Lock the panel">
-                                <FontAwesomeIcon icon={isStylingMode ? faLock : faLockOpen} />
-                            </button>
-                        </motion.div>
+                        
+                        <button className="btn close-panel" onClick={toggleStylingMode} aria-label="Lock the panel">
+                        <FontAwesomeIcon icon={isStylingMode ? faLock : faLockOpen} />
+                    </button>
+                    </motion.div>
                     )}
                 </AnimatePresence>
             </div>
