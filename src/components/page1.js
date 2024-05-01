@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import '../components/contacts.css';
 import ToggleSwitch from './ToggleSwitch';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenToSquare} from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faSquarePen } from '@fortawesome/free-solid-svg-icons';
 const { ipcRenderer } = window.require('electron');
 
 const Page1 = ({ setCurrentPage, setEditingContact }) => {
     const [contacts, setContacts] = useState([]);
+    const [filter, setFilter] = useState([]);
 
     useEffect(() => {
         fetchContacts();
@@ -18,54 +19,78 @@ const Page1 = ({ setCurrentPage, setEditingContact }) => {
         }).catch(err => console.error('Error fetching contacts:', err));
     };
 
-    const handleEdit = (contact) => {
-      setEditingContact(contact); 
-      setCurrentPage(3);  
-  };
+    const handleDelete = (contactId) => {
+        ipcRenderer.send('deleteContact', contactId);
+        setContacts(contacts.filter(contact => contact.id !== contactId));
+    };
 
-    const handleToggleActive = (index) => {
-      
-      const updatedContacts = contacts.map((contact, idx) => {
-          if (idx === index) {
-              return { ...contact, active: !contact.active };
-          }
-          return contact;
-      });
+    const handleToggleActive = (contactId) => {
+        const updatedContacts = contacts.map(contact => {
+            if (contact.id === contactId) {
+                return { ...contact, active: !contact.active };
+            }
+            return contact;
+        });
 
-      
-      setContacts(updatedContacts);
+        setContacts(updatedContacts);
+        ipcRenderer.send('updateContact', updatedContacts.find(contact => contact.id === contactId));
+    };
 
-     
-       ipcRenderer.send('updateContact', updatedContacts[index]);
-  };
+    const getInitials = (name) => {
+        return name.split(' ').map((word) => word[0].toUpperCase()).join('');
+    };
 
+    const handleFilterChange = (group) => {
+        if (filter.includes(group)) {
+            setFilter(filter.filter(g => g !== group));
+        } else {
+            setFilter([...filter, group]);
+        }
+    };
+
+    const groups = [...new Set(contacts.map(contact => contact.group))];
 
     return (
         <div className='innerpage'>
-            
+            <div className="group-filters">
+                {groups.map(group => (
+                    <label key={group}>
+                        <input
+                            type="checkbox"
+                            checked={filter.includes(group) || filter.length === 0}
+                            onChange={() => handleFilterChange(group)}
+                        />
+                        {group}
+                    </label>
+                ))}
+            </div>
+
             {contacts.length > 0 ? (
                 <ul className="contact-list">
-                    {contacts.map((contact, index) => (
-                       <li key={index} className="contact-item">
-                        <div className="contact-info">
-                          <div className="avatar">CN</div>
-                          <div className="details">
-                          <div className="name">{contact.name}</div>
-                          <div className="group">{contact.group}</div>
-                          </div>
-                        </div>
-                          <div className="status-toggle">
-                          <button className="edit-btn" onClick={() => {
-                                setEditingContact(contact);
-                                setCurrentPage(2);  
-                            }}>
-                          <FontAwesomeIcon icon={faPenToSquare} />
-                          </button>
-                             <ToggleSwitch
-                                isActive={contact.active}
-                                onChange={() => handleToggleActive(index)}
-                            />
-                          </div>
+                    {contacts.filter(contact => filter.length === 0 || filter.includes(contact.group)).map(contact => (
+                        <li key={contact.id} className="contact-item">
+                            <div className="contact-info">
+                                <div className="avatar">{getInitials(contact.name)}</div>
+                                <div className="details">
+                                    <div className="name">{contact.name}</div>
+                                    <div className="group">{contact.group}</div>
+                                </div>
+                            </div>
+                            <div className="status-toggle">
+                                <button className="trash-btn" onClick={() => handleDelete(contact.id)}>
+                                    <FontAwesomeIcon icon={faTrash} />
+                                </button>
+                                <button className="edit-btn" onClick={() => {
+                                    setEditingContact(contact);
+                                    setCurrentPage(2);  
+                                }}>
+                                    <FontAwesomeIcon icon={faSquarePen} />
+                                </button>
+                                <ToggleSwitch
+                                    isActive={contact.active}
+                                    onChange={() => handleToggleActive(contact.id)}
+                                />
+                            </div>
                         </li>
                     ))}
                 </ul>

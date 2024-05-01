@@ -22,10 +22,10 @@ let mainWindow; // Keep a global reference of the window object
 function createWindow() {
     mainWindow = new BrowserWindow({
         width: 430,
-        height: 600,
+        height: 650,
         frame: false,
         transparent: true,
-        resizable: false,
+        resizable: true,
         icon: '/src/components/assets/icon/smartcontact.ico',
         webPreferences: {
             nodeIntegration: true,
@@ -36,17 +36,17 @@ function createWindow() {
     mainWindow.loadFile(path.join(__dirname, 'public', 'index.html'));
 
     // Uncomment the following line to open the DevTools:
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     ensureDataFileExists();
 }
 
 ipcMain.on('close-app', () => {
-    mainWindow.close();  // Properly target the mainWindow to close it
+    mainWindow.close();  
 });
 
 ipcMain.on('minimize-app', () => {
-    mainWindow.minimize();  // Properly target the mainWindow to minimize it
+    mainWindow.minimize();  
 });
 
 ipcMain.on('updateContact', async (event, updatedContact) => {
@@ -88,6 +88,13 @@ ipcMain.handle('writeContacts', async (event, contacts) => {
         return false;
     }
 });
+
+ipcMain.on('deleteContact', (event, contactId) => {
+    let contacts = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    contacts = contacts.filter(contact => contact.id !== contactId);
+    fs.writeFileSync(filePath, JSON.stringify(contacts, null, 2), 'utf8');
+});
+
 
 app.on('ready', () => {
     createWindow();

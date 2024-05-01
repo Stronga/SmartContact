@@ -65,7 +65,7 @@ strong {
  }
  .panel {
     width: 370px;
-    height: 400px;
+    height: 450px;
     flex-grow: 0;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
     background-color: #ffffffdb;
@@ -180,6 +180,6 @@ strong {
 
 .innerpage{
   overflow-y: scroll;
-  height: 400px;
+  height: 450px;
   scrollbar-gutter: stable both-edges;
 }
