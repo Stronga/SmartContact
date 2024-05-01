@@ -159,6 +159,16 @@ strong {
         font-size: 14px;
         cursor: pointer;
 }
+.close-panelnw {
+  position: absolute;
+  bottom: 10px;
+  right:30px;
+  border: none;
+  background: none;
+  color: #450d59; 
+  font-size: 14px;
+  cursor: pointer;
+}
       
 .innerpage::-webkit-scrollbar-track
 {
@@ -168,13 +178,13 @@ strong {
 
 .innerpage::-webkit-scrollbar
 {
-	width: 6px;
+	width: 3px;
 	background-color: #F5F5F5;
 }
 
 .innerpage::-webkit-scrollbar-thumb
 {
-	border-radius: 6px;
+	border-radius: 3px;
   background-color: #380a4956;
 }
 

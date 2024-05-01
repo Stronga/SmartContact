@@ -6,7 +6,7 @@ import Page3 from './components/page3';
 import WindowControls from './components/WindowControls';
 import './components/Panel.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane, faCirclePlus, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane, faCirclePlus, faLock, faLockOpen, faAnglesUp } from '@fortawesome/free-solid-svg-icons';
 
 const panelVariants = {
     hidden: { y: "-100%", opacity: 0 },
@@ -16,6 +16,8 @@ const panelVariants = {
         transition: { duration: 0.5 }
     }
 };
+
+
 
 const Navigation = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -50,6 +52,9 @@ const Navigation = () => {
         setIsStylingMode(!isStylingMode);
         setIsPanelVisible(true);
     };
+    const toggleClose = () => {
+        setIsPanelVisible(false);
+    };
 
     const onNavigate = (page) => {
         setCurrentPage(page);
@@ -61,7 +66,7 @@ const Navigation = () => {
             case 1: return <Page1 setCurrentPage={setCurrentPage} setEditingContact={setEditingContact} />;
             case 2: return <Page2 editingContact={editingContact} onNavigate={onNavigate} />;
             case 3: return <Page3 editingContact={editingContact} />;
-            default: return <div>Select a page</div>;
+            default: return <div>If you see this I my self will be suprise</div>;
         }
     };
 
@@ -117,7 +122,10 @@ const Navigation = () => {
                         >
                             {renderPage()}
                         
-                        <button className="btn close-panel" onClick={toggleStylingMode} aria-label="Lock the panel">
+                        <button className="btn close-panelnw" onClick={toggleClose} aria-label="Lock the panel">
+                        <FontAwesomeIcon icon={faAnglesUp} />
+                    </button>
+                    <button className="btn close-panel" onClick={toggleStylingMode} aria-label="Lock the panel">
                         <FontAwesomeIcon icon={isStylingMode ? faLock : faLockOpen} />
                     </button>
                     </motion.div>

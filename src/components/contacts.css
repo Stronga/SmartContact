@@ -201,16 +201,22 @@
   display:none;
 }
 
-.group-items {
-
+.group-filters {
+  background-color: #e5e5f7;
+  background-image: radial-gradient(#8310dd 0.6000000000000001px, #e5e5f7 0.6000000000000001px);
+  background-size: 12px 12px;
+  padding: 5px;
+  border-radius: 0px 5px 0px 5px;
+  border-radius: 0px 0px 5px 5px;
 }
 
 .group-items:hover {
   background-color: #e0e0e0;
 }
 
-.group-filters {
-  display: ruby;
+.group-filters div {
+  display:inline;
+ 
 }
 
 .group-filters label {
