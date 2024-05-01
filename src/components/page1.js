@@ -52,18 +52,21 @@ const Page1 = ({ setCurrentPage, setEditingContact }) => {
 
     return (
         <div className='innerpage'>
-            <div className="group-filters">
-                {groups.map(group => (
-                    <label key={group}>
-                        <input
-                            type="checkbox"
-                            checked={filter.includes(group) || filter.length === 0}
-                            onChange={() => handleFilterChange(group)}
-                        />
-                        {group}
-                    </label>
-                ))}
-            </div>
+           <div className="group-filters">
+    {groups.map(group => (
+        <div key={group}>
+            <input
+                id={`checkbox-${group}`}
+                type="checkbox"
+                checked={filter.includes(group)}
+                onChange={() => handleFilterChange(group)}
+                style={{ display: 'none' }} // Ensure it's hidden
+            />
+            <label htmlFor={`checkbox-${group}`}>{group}</label>
+        </div>
+    ))}
+</div>
+
 
             {contacts.length > 0 ? (
                 <ul className="contact-list">
