@@ -46,7 +46,7 @@
 }
 
 .minimize-btn:hover{
-  color:#ffffff
+  color:#aaaaaa
 }
 .btn {
   -webkit-app-region: no-drag;
@@ -119,7 +119,105 @@ strong {
     color: #450d59;
     background-color: #fff;
     -webkit-app-region: no-drag;
+    transition-property:transform;
+    transition-duration:.25s;
   }
+
+  .fa-paper-plane{
+    transition-property:transform;
+    transition-duration:.25s;
+  }
+  .fa-paper-plane:hover{
+    transform:scale(1.2);
+  }
+
+    .send-btn-animate .fa-paper-plane{
+      -webkit-animation: rocket 1s cubic-bezier(0.36, 0.07, 0.57, 0.99) infinite;
+          animation: rocket 1s cubic-bezier(0.36, 0.07, 0.57, 0.99) infinite;
+    }
+
+    .send-btn-animate {
+      font-size: 16px!important;
+    }
+    
+@-webkit-keyframes rocket {
+  0% {
+    transform: scale(1.5) translate(0, 0);
+    opacity: 1;
+  }
+  5% {
+    transform: scale(1.5) translate(2px, 0);
+    opacity: 1;
+  }
+  10% {
+    transform: scale(1.5) translate(1px, -2px);
+    opacity: 1;
+  }
+  15% {
+    transform: scale(1.5) translate(3px, -1px);
+    opacity: 1;
+  }
+  20% {
+    transform: scale(1.5) translate(2px, -3px);
+    opacity: 1;
+  }
+  25% {
+    transform: scale(1.5) translate(4px, -2px);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5) translate(10px, -10px);
+    opacity: 0;
+  }
+  51% {
+    transform: scale(1.5) translate(-10px, 10px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.5) translate(0, 0);
+    opacity: 1;
+  }
+}
+@keyframes rocket {
+  0% {
+    transform: scale(1.5) translate(0, 0);
+    opacity: 1;
+  }
+  5% {
+    transform: scale(1.5) translate(2px, 0);
+    opacity: 1;
+  }
+  10% {
+    transform: scale(1.5) translate(1px, -2px);
+    opacity: 1;
+  }
+  15% {
+    transform: scale(1.5) translate(3px, -1px);
+    opacity: 1;
+  }
+  20% {
+    transform: scale(1.5) translate(2px, -3px);
+    opacity: 1;
+  }
+  25% {
+    transform: scale(1.5) translate(4px, -2px);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5) translate(10px, -10px);
+    opacity: 0;
+  }
+  51% {
+    transform: scale(1.5) translate(-10px, 10px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.5) translate(0, 0);
+    opacity: 1;
+  }
+}
+
+
 
   .btn.add-btn{
     float: right;

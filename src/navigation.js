@@ -43,10 +43,24 @@ const Navigation = () => {
     }, [timeoutId, isStylingMode]);
 
     const handleNavClick = (page) => {
-        setIsPanelVisible(true);
+    // Check if the requested page is page 1
+    if (page === 1) {
+        if (isPanelVisible && currentPage === 1) {
+            setCurrentPage(3);
+        } else {
+            setIsPanelVisible(true);
+            setCurrentPage(1);
+        }
+    } else {
+       setIsPanelVisible(true);
         setCurrentPage(page);
-        if (page === 2) setEditingContact(null);
-    };
+        if (page === 2) {
+            // Reset editing contact if navigating to page 2
+            setEditingContact(null);
+        }
+    }
+};
+
 
     const toggleStylingMode = () => {
         setIsStylingMode(!isStylingMode);
@@ -65,7 +79,7 @@ const Navigation = () => {
         switch (currentPage) {
             case 1: return <Page1 setCurrentPage={setCurrentPage} setEditingContact={setEditingContact} />;
             case 2: return <Page2 editingContact={editingContact} onNavigate={onNavigate} />;
-            case 3: return <Page3 editingContact={editingContact} />;
+            case 3: return <Page3/>;
             default: return <div>If you see this I my self will be suprise</div>;
         }
     };
@@ -97,7 +111,8 @@ const Navigation = () => {
         <div className='appwrap'>
             <WindowControls />
             <div className="mainApp draggable">
-                <button className="btn send-btn" onClick={() => handleNavClick(1)}>
+                <button className={`btn send-btn ${currentPage === 3 && isPanelVisible ? 'send-btn-animate' : ''}`}
+    onClick={() => handleNavClick(1)}>
                     <FontAwesomeIcon icon={faPaperPlane} />
                 </button>
                 <div className='apptitle'>

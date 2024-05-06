@@ -25,21 +25,28 @@ function createWindow() {
         height: 650,
         frame: false,
         transparent: true,
-        resizable: true,
-        icon: '/src/components/assets/icon/smartcontact.ico',
+        resizable: false,
+        icon: path.join(__dirname, 'src', 'sc.ico'),
         webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false // Important for preloading scripts and security
+            preload: path.join(__dirname, 'preload.js'),
+            contextIsolation: false,
+            nodeIntegration: true
+            
         }
     });
 
     mainWindow.loadFile(path.join(__dirname, 'public', 'index.html'));
 
     // Uncomment the following line to open the DevTools:
-    mainWindow.webContents.openDevTools();
+   
 
+mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+});
     ensureDataFileExists();
 }
+
+
 
 ipcMain.on('close-app', () => {
     mainWindow.close();  

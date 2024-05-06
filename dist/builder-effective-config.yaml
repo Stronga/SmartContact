@@ -1,0 +1,16 @@
+directories:
+  output: dist
+  buildResources: build
+appId: com.example.smartcard
+productName: SmartCard
+files:
+  - filter:
+      - dist/
+      - node_modules/
+win:
+  icon: src/sc.ico
+mac:
+  icon: src/apple.icns
+linux:
+  icon: src/app.png
+electronVersion: 30.0.1

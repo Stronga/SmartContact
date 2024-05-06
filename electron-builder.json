@@ -1,0 +1,21 @@
+{
+    "appId": "com.example.smartcard",
+    "productName": "SmartCard",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "dist/",
+      "node_modules/"
+    ],
+    "win": {
+      "icon": "src/sc.ico"
+    },
+    "mac": {
+      "icon": "src/apple.icns"
+    },
+    "linux": {
+      "icon": "src/app.png"
+    }
+  }
+  
