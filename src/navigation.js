@@ -17,6 +17,13 @@ const panelVariants = {
     }
 };
 
+const taglines = [
+    'Send a message today.',
+    'Group contacts in one click.',
+    'Email whole teams instantly.',
+    'Keep work, friends, and family organized.'
+];
+
 
 
 const Navigation = () => {
@@ -26,6 +33,9 @@ const Navigation = () => {
     const [isStylingMode, setIsStylingMode] = useState(false);
     const [timeoutId, setTimeoutId] = useState(null);
     const panelRef = useRef(null);
+    const [displayText, setDisplayText] = useState('');
+    const [messageIndex, setMessageIndex] = useState(0);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         const events = ['mousemove', 'keydown'];
@@ -103,9 +113,32 @@ const Navigation = () => {
             }
         }
     }, [isPanelVisible]);
-    
-    
-    
+
+    // simple type/delete loop for the rotating subtitle
+    useEffect(() => {
+        const current = taglines[messageIndex];
+        const finished = displayText === current;
+        const cleared = displayText === '';
+        let timer;
+
+        if (!isDeleting && finished) {
+            timer = setTimeout(() => setIsDeleting(true), 1400);
+        } else if (isDeleting && cleared) {
+            timer = setTimeout(() => {
+                setIsDeleting(false);
+                setMessageIndex((messageIndex + 1) % taglines.length);
+            }, 250);
+        } else {
+            timer = setTimeout(() => {
+                const nextLength = displayText.length + (isDeleting ? -1 : 1);
+                setDisplayText(current.slice(0, nextLength));
+            }, isDeleting ? 40 : 80);
+        }
+
+        return () => clearTimeout(timer);
+    }, [displayText, isDeleting, messageIndex]);
+
+
 
     return (
         <div className='appwrap'>
@@ -117,7 +150,10 @@ const Navigation = () => {
                 </button>
                 <div className='apptitle'>
                     <h1>SmartCard</h1>
-                    <h2>Send A Message Today.</h2>
+                    <div className='typing-line' aria-live="polite">
+                        <h2>{displayText}</h2>
+                        <span className='typing-caret' aria-hidden="true" />
+                    </div>
                 </div>
                 <button className="btn add-btn" onClick={() => handleNavClick(2)}>
                     <FontAwesomeIcon icon={faCirclePlus} />

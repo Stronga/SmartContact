@@ -247,6 +247,22 @@ strong {
         font-weight: normal;
         font-size: 10px;
 }
+.typing-line{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 12px;
+}
+.typing-caret{
+  width: 6px;
+  height: 12px;
+  background-color: #fff;
+  border-radius: 2px;
+  animation: blink 1s steps(2, start) infinite;
+}
+@keyframes blink{
+  to { opacity: 0; }
+}
 .close-panel {
         position: absolute;
         bottom: 10px;
