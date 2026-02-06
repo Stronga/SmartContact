@@ -26,15 +26,31 @@ const Page2 = ({ editingContact, onNavigate }) => {
   }
   }, [editingContact]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    const trimmedEmail = email.trim();
     const contactData = {
       id: editingContact ? editingContact.id : uuidv4(),
-      name,
-      email,
-      group,
+      name: name.trim(),
+      email: trimmedEmail,
+      group: group.trim(),
       active: isActive,
     };
+
+    try {
+      const existing = await ipcRenderer.invoke('readContacts');
+      const duplicate = existing.find(c =>
+        c.email &&
+        c.email.toLowerCase() === trimmedEmail.toLowerCase() &&
+        c.id !== contactData.id
+      );
+      if (duplicate) {
+        const proceed = window.confirm(`A contact with this email already exists (${duplicate.name}). Add anyway?`);
+        if (!proceed) return;
+      }
+    } catch (err) {
+      console.error('Duplicate check failed:', err);
+    }
 
     // add or update logic
     const ipcAction = editingContact ? 'updateContact' : 'addContact';

@@ -1,9 +1,11 @@
-const { app, BrowserWindow, globalShortcut, ipcMain } = require('electron');
+const { app, BrowserWindow, globalShortcut, ipcMain, dialog } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
-// Path to the JSON file
 const filePath = path.join(app.getPath('userData'), 'contacts.json');
+const WRITE_DEBOUNCE_MS = 200;
+let writeTimer = null;
+let pendingContacts = null;
 
 // Seed data written the first time the app runs so the UI isn't empty
 const defaultContacts = [
@@ -46,6 +48,20 @@ function ensureDataFileExists() {
 }
 
 let mainWindow; // Keep a global reference of the window object
+const scheduleWrite = (contacts) => {
+    pendingContacts = contacts;
+    if (writeTimer) clearTimeout(writeTimer);
+    writeTimer = setTimeout(() => {
+        try {
+            fs.writeFileSync(filePath, JSON.stringify(pendingContacts, null, 2), 'utf8');
+        } catch (err) {
+            console.error('Failed to write contacts:', err);
+        } finally {
+            writeTimer = null;
+            pendingContacts = null;
+        }
+    }, WRITE_DEBOUNCE_MS);
+};
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -88,7 +104,7 @@ ipcMain.on('updateContact', async (event, updatedContact) => {
     try {
         let contacts = JSON.parse(fs.readFileSync(filePath, 'utf8'));
         contacts = contacts.map(contact => contact.id === updatedContact.id ? updatedContact : contact);
-        await fs.promises.writeFile(filePath, JSON.stringify(contacts, null, 2), 'utf8');
+        scheduleWrite(contacts);
     } catch (error) {
         console.error('Failed to update contact:', error);
     }
@@ -98,7 +114,7 @@ ipcMain.on('addContact', (event, newContact) => {
     try {
         let contacts = JSON.parse(fs.readFileSync(filePath, 'utf8'));
         contacts.push(newContact);
-        fs.writeFileSync(filePath, JSON.stringify(contacts, null, 2), 'utf8');
+        scheduleWrite(contacts);
     } catch (error) {
         console.error('Failed to add contact:', error);
     }
@@ -116,7 +132,7 @@ ipcMain.handle('readContacts', async () => {
 
 ipcMain.handle('writeContacts', async (event, contacts) => {
     try {
-        fs.writeFileSync(filePath, JSON.stringify(contacts, null, 2), 'utf8');
+        scheduleWrite(contacts);
         return true;
     } catch (error) {
         console.error('Failed to write contacts:', error);
@@ -127,7 +143,41 @@ ipcMain.handle('writeContacts', async (event, contacts) => {
 ipcMain.on('deleteContact', (event, contactId) => {
     let contacts = JSON.parse(fs.readFileSync(filePath, 'utf8'));
     contacts = contacts.filter(contact => contact.id !== contactId);
-    fs.writeFileSync(filePath, JSON.stringify(contacts, null, 2), 'utf8');
+    scheduleWrite(contacts);
+});
+
+ipcMain.handle('exportContacts', async () => {
+    try {
+        const contacts = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        const { canceled, filePath: targetPath } = await dialog.showSaveDialog({
+            defaultPath: 'contacts.json',
+            filters: [{ name: 'JSON', extensions: ['json'] }]
+        });
+        if (canceled || !targetPath) return { success: false, message: 'Export canceled' };
+        fs.writeFileSync(targetPath, JSON.stringify(contacts, null, 2), 'utf8');
+        return { success: true, count: contacts.length };
+    } catch (error) {
+        console.error('Failed to export contacts:', error);
+        return { success: false, message: error.message };
+    }
+});
+
+ipcMain.handle('importContacts', async () => {
+    try {
+        const { canceled, filePaths } = await dialog.showOpenDialog({
+            filters: [{ name: 'JSON', extensions: ['json'] }],
+            properties: ['openFile']
+        });
+        if (canceled || !filePaths || filePaths.length === 0) return { success: false, message: 'Import canceled' };
+        const data = fs.readFileSync(filePaths[0], 'utf8');
+        const parsed = JSON.parse(data);
+        if (!Array.isArray(parsed)) throw new Error('Invalid contacts file');
+        scheduleWrite(parsed);
+        return { success: true, count: parsed.length };
+    } catch (error) {
+        console.error('Failed to import contacts:', error);
+        return { success: false, message: error.message };
+    }
 });
 
 

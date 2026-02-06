@@ -12,12 +12,20 @@
     font-style: normal;
   }
   
+:root{
+  --panel-font-scale: 1;
+}
+
   body {
     font-family: 'Inter', sans-serif;
     margin:0;
+    overflow: hidden;
   }
   .appwrap{
     width: 430px;
+    font-size: calc(14px * var(--panel-font-scale, 1));
+    height: 650px;
+    overflow: hidden;
   }
  .btn:focus { outline: none; }
 .draggable {
@@ -63,9 +71,80 @@
 strong {
     font-weight: bold; 
  }
+ .panel-actions{
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+  -webkit-app-region: no-drag;
+ }
+ .panel-action{
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: 1px solid rgba(69,13,89,0.25);
+  background: rgba(255,255,255,0.85);
+  color: #450d59;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+  transition: transform .15s ease, background .15s ease, color .15s ease;
+ }
+ .panel-action:hover{
+  background: #450d59;
+  color: #fff;
+  transform: translateY(-1px);
+ }
+ .panel-action:focus-visible{
+  outline: 2px solid #c8b3ff;
+  outline-offset: 2px;
+ }
+ .settings-drawer{
+  position: absolute;
+  top: 50px;
+  right: 16px;
+  width: 220px;
+  padding: 12px;
+  background: rgba(255,255,255,0.95);
+  border: 1px solid #e2d9f3;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  color: #2e126d;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 3;
+ }
+ .settings-row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+ }
+ .settings-row select,
+ .settings-row input[type=range]{
+  flex: 1;
+  border: 1px solid #d8cae8;
+  border-radius: 8px;
+  padding: 6px;
+  background: #f7f2ff;
+  color: #2e126d;
+ }
+ .settings-row input[type=range]{
+  padding: 0;
+ }
+ .checkbox-row{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+ }
  .panel {
     width: 370px;
-    height: 450px;
+    height: 430px;
     flex-grow: 0;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
     background-color: #ffffffdb;
@@ -83,8 +162,27 @@ strong {
   .panel-container {
     overflow: hidden;
     width:430px;
-    max-height: 600px;
+    height: 560px;
     
+  }
+
+  .theme-solid .panel{
+    background-color: #f6f4fb;
+    backdrop-filter: none;
+  }
+  .theme-solid .mainApp{
+    background-color: #4b1a63;
+    backdrop-filter: none;
+  }
+  .theme-solid .btn.send-btn{
+    background-color: #fff;
+    color: #4b1a63;
+  }
+  .theme-solid .contact-item{
+    background-color: #fdfcfe;
+  }
+  .theme-solid .innerpage{
+    background-color: #f9f7fd;
   }
 
   .mainApp{
@@ -304,6 +402,6 @@ strong {
 
 .innerpage{
   overflow-y: scroll;
-  height: 450px;
+  height: 100%;
   scrollbar-gutter: stable both-edges;
 }

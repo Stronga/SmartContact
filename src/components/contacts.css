@@ -95,11 +95,85 @@
     transform: translateX(26px);
   }
   
-  .contact-form {
+.contact-form {
     max-width: 350px;
     margin: 40px auto;
 }
 
+.list-controls{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 10px 0 12px 0;
+}
+
+.list-controls input[type="search"],
+.list-controls select{
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #d6c9e6;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #f9f6ff;
+  color: #2e126d;
+}
+
+.list-controls select{
+  flex: 0 0 140px;
+}
+
+.sync-controls{
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.sync-controls button{
+  flex: 1;
+  border: 1px solid #d6c9e6;
+  background: #f5efff;
+  color: #2e126d;
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.sync-controls button:hover{
+  background: #e6ddff;
+}
+
+.bulk-controls{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+.bulk-controls button{
+  border: 1px solid #d6c9e6;
+  background: #f5efff;
+  color: #2e126d;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.bulk-controls .danger{
+  border-color: #e3b3b3;
+  color: #8b1d1d;
+  background: #fde9e9;
+}
+.bulk-controls button:disabled{
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.bulk-left button{
+  margin-right: 6px;
+}
+.select-box{
+  margin-right: 10px;
+}
 .contact-form label {
     display: block;
     margin-bottom: 5px;
