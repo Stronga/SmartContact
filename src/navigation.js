@@ -227,6 +227,7 @@ const Navigation = () => {
                                     <select value={theme} onChange={(e) => setTheme(e.target.value)}>
                                         <option value="glass">Glass</option>
                                         <option value="solid">Solid</option>
+                                        <option value="dark">Dark</option>
                                     </select>
                                 </div>
                                 <div className="settings-row">

@@ -109,7 +109,7 @@ strong {
   padding: 12px;
   background: rgba(255,255,255,0.95);
   border: 1px solid #e2d9f3;
-  border-radius: 12px;
+  border-radius: 5px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.12);
   color: #2e126d;
   display: flex;
@@ -131,7 +131,7 @@ strong {
   border-radius: 8px;
   padding: 6px;
   background: #f7f2ff;
-  color: #2e126d;
+  color: #180542;
  }
  .settings-row input[type=range]{
   padding: 0;
@@ -152,7 +152,7 @@ strong {
     justify-content: center;
     transform: translateY(-100%);
     transition: transform 0.5s ease-in-out;
-    padding: 40px 15px;
+    padding: 40px  15px 46px 15px;
     border-radius: 0 0 14px 14px;
     margin: -40px auto 40px;
     position: relative;
@@ -181,9 +181,37 @@ strong {
   .theme-solid .contact-item{
     background-color: #fdfcfe;
   }
-  .theme-solid .innerpage{
-    background-color: #f9f7fd;
-  }
+.theme-solid .innerpage{
+  background-color: #f9f7fd;
+}
+.theme-dark .panel{
+  background-color: #171421;
+  color: #f1ecff;
+}
+.theme-dark .mainApp{
+  background-color: #1f1a2c;
+  backdrop-filter: none;
+}
+.theme-dark .btn.send-btn{
+  background: #2e2540;
+  color: #f1ecff;
+}
+.theme-dark .contact-item{
+  background: #1f1a2c;
+  border-bottom: 1px solid #2d2640;
+}
+.theme-dark .innerpage{
+  background: #0f0c18;
+  color: #f1ecff;
+}
+.theme-dark .gbtn{
+  background-color: #241c32;
+  color: #f1ecff;
+}
+.theme-dark .gbtn-selected{
+  background-color: #3a3052;
+  color: #f1ecff;
+}
 
   .mainApp{
     width:400px;

@@ -186,6 +186,9 @@ app.on('ready', () => {
   
     // Register a shortcut listener for 'Control+Shift+I'
     globalShortcut.register('Control+Shift+I', () => {
+        if (mainWindow && mainWindow.webContents) {
+            mainWindow.webContents.openDevTools({ mode: 'detach' });
+        }
     });
   });
 
